@@ -1,0 +1,19 @@
+name: Build Requiem Upscaler
+on:
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pyinstaller py7zr
+      - run: python RequiemUpscaler.py --make-icon
+      - run: pyinstaller --onefile --windowed --icon=requiem_jester.ico --add-data "requiem_jester.ico;." --collect-all py7zr --name RequiemUpscaler RequiemUpscaler.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: RequiemUpscaler-exe
+          path: dist/RequiemUpscaler.exe
